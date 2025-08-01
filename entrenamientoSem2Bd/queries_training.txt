@@ -1,0 +1,68 @@
+1) Obtener el listado de todos los estudiantes junto con sus inscripciones y cursos (JOIN):
+
+SELECT 
+e.nombre_completo AS estudiante,
+c.nombre AS curso,
+i.fecha_inscripcion AS fecha_inscripcion
+FROM estudiantes e 
+JOIN inscripciones i ON e.id_estudiante = i.id_estudiante
+JOIN cursos c ON i.id_curso = c.id_curso;
+
+
+ -- ver capturaN1.png
+
+2) Listar los cursos dictados por docentes con más de 5 años de experiencia:
+
+SELECT 
+c.nombre AS curso,
+d.nombre_completo AS docente,
+d.anios_experiencia AS experiencia
+FROM cursos c
+JOIN docentes d ON c.id_docente = d.id_docente 
+WHERE d.anios_experiencia >= 5;
+
+-- ver capturaN2.png
+
+3) Obtener el promedio de calificaciones por curso (GROUP BY + AVG).
+
+SELECT 
+c.nombre AS curso,
+AVG(i.calificacion_final) AS  calificacion_promedio_por_curso
+FROM inscripciones i
+JOIN cursos c ON i.id_curso = c.id_curso
+GROUP BY c.nombre;
+
+-- ver capturaN3.png
+
+4) Mostrar los estudiantes que están inscritos en más de un curso (HAVING COUNT(*) > 1).
+
+SELECT
+e.nombre_completo AS nombre_estudiante_inscriptos_en_varios_cursos,
+COUNT(*) AS cantidad_cursos
+FROM inscripciones i
+JOIN estudiantes e ON i.id_estudiante = e.id_estudiante
+GROUP BY e.nombre_completo
+HAVING COUNT(*) > 1
+
+--ver capturaN4.png
+
+5) Agregar una nueva columna estado_academico a la tabla estudiantes (ALTER TABLE).
+
+ALTER TABLE estudiantes
+ADD COLUMN estado_academico ENUM('activo', 'inactivo', 'gradudado') DEFAULT 'activo';
+
+--ver capturaN5.png
+
+6) Eliminar un docente y observar el efecto en la tabla cursos (uso de ON DELETE en FK).
+
+DELETE FROM docentes
+WHERE id_docente = 3;
+
+-- se elimino correctamente, y en la tabla solo quito el registro del curso que daba ese docente. quiza porque tenia 2 docentes dando el mismo curso. (no tenia ON DELETE en la tabla)
+
+--ver capturaN6.png
+
+
+Consultar los cursos en los que se han inscrito más de 2 estudiantes (GROUP BY + COUNT + HAVING).
+
+
